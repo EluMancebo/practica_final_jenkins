@@ -53,8 +53,8 @@ pipeline {
         stage('Update_Readme') {
             steps {
                 script {
-                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/update_readme.sh'
-                    README_UPDATE_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/update_readme.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/update_radme.sh'
+                    README_UPDATE_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/update_radme.sh', returnStdout: true).trim()
                 }
             }
         }
