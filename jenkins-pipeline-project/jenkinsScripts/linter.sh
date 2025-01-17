@@ -1,6 +1,7 @@
 #!/bin/bash
 cd jenkins-pipeline-project
-npx eslint . 
+npm install
+npm run lint 
 
 if [ $? -eq 0 ]; then
   echo "Linter: success"
