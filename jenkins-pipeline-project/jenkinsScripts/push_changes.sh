@@ -1,4 +1,6 @@
 #!/bin/bash
+git config --global user.name "EluM"
+git config --global user.email "emango0298@gmail.com"
 
 cd jenkins-pipeline-project
 git add README.md
