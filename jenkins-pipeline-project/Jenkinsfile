@@ -22,8 +22,8 @@ pipeline {
         stage('Linter') {
             steps {
                 script {
-                    sh 'chmod +x jenkinsScripts/linter.sh'
-                    LINTER_RESULT = sh(script: './jenkinsScripts/linter.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/linter.sh'
+                    LINTER_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/linter.sh', returnStdout: true).trim()
                 }
             }
         }
@@ -32,8 +32,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                     sh 'chmod +x jenkinsScripts/test.sh'
-                    TEST_RESULT = sh(script: './jenkinsScripts/test.sh', returnStdout: true).trim()
+                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/test.sh'
+                    TEST_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/test.sh', returnStdout: true).trim()
                 }
             }
         }
@@ -42,8 +42,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'chmod +x jenkinsScripts/build.sh'
-                    BUILD_RESULT = sh(script: './jenkinsScripts/build.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/build.sh'
+                    BUILD_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/build.sh', returnStdout: true).trim()
                 }
             }
         }
@@ -52,8 +52,8 @@ pipeline {
         stage('Update_Readme') {
             steps {
                 script {
-                    sh 'chmod +x jenkinsScripts/update_readme.sh'
-                    README_UPDATE_RESULT = sh(script: './jenkinsScripts/update_readme.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/update_readme.sh'
+                    README_UPDATE_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/update_readme.sh', returnStdout: true).trim()
                 }
             }
         }
@@ -62,8 +62,8 @@ pipeline {
         stage('Push_Changes') {
             steps {
                 script {
-                    sh 'chmod +x jenkinsScripts/push_changes.sh'
-                    PUSH_RESULT = sh(script: './jenkinsScripts/push_changes.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
+                    PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
                 }
             }
         }
@@ -75,8 +75,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'chmod +x jenkinsScripts/deploy_to_vercel.sh'
-                    DEPLOY_RESULT = sh(script: './jenkinsScripts/deploy_to_vercel.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/deploy_to_vercel.sh'
+                    DEPLOY_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/deploy_to_vercel.sh', returnStdout: true).trim()
                 }
             }
         }
@@ -85,8 +85,8 @@ pipeline {
         stage('Notificació') {
             steps {
                 script {
-                    sh 'chmod +x jenkinsScripts/notificacion.sh'
-                    NOTIFICATION_RESULT = sh(script: './jenkinsScripts/notificacion.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notificacion.sh'
+                    NOTIFICATION_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/notificacion.sh', returnStdout: true).trim()
                 }
             }
         }
