@@ -60,16 +60,16 @@ pipeline {
         }
 
         
-        stage('Push_Changes') {
+       stage('Push_Changes') {
     steps {
         withCredentials([usernamePassword(credentialsId: 'GITHUB_TOKEN_ID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
             script {
                 // Configurar la URL remota con las credenciales
                 sh """
-                    git remote set-url origin https://github.com/EluMancebo/practica_final_jenkins.git
+                    git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/EluMancebo/practica_final_jenkins.git
                 """
 
-                // Ejecutar el script para hacer el push de los cambios
+                // Ejecutar el script para hacer el push
                 sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
                 PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
 
@@ -79,6 +79,7 @@ pipeline {
         }
     }
 }
+
 
 
        

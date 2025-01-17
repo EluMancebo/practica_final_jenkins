@@ -36,14 +36,17 @@ git pull origin ci_jenkins --rebase || {
 git add .
 
 # Crear un commit con las variables de entorno
-git commit -m "Pipeline ejecutada por $EXECUTOR, el motivo es: $MOTIVO"
+git commit -m "Pipeline ejecutada por $EXECUTOR, el motivo es: $MOTIVO" || echo "Nada que confirmar"
 
 # Realizar el push al remoto con credenciales HTTPS
 echo "Haciendo push al remoto..."
 git push origin ci_jenkins || {
     echo "Error al hacer push. Intentando resolver..."
     git pull origin ci_jenkins --rebase
-    git push origin ci_jenkins
+    git push origin ci_jenkins || {
+        echo "Push fallido después de intentar resolver conflictos."
+        exit 1
+    }
 }
 
 # Verificar el resultado del push
