@@ -1,0 +1,108 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'EXECUTOR', defaultValue: '', description: 'Nombre de la persona que ejecuta la pipeline')
+        string(name: 'MOTIVO', defaultValue: '', description: 'Motivo de la ejecución de la pipeline')
+        string(name: 'CHAT_ID', defaultValue: '', description: 'Chat ID de Telegram para notificaciones')
+    }
+
+    environment {
+        LINTER_RESULT = ''
+        TEST_RESULT = ''
+        BUILD_RESULT = ''
+        README_UPDATE_RESULT = ''
+        PUSH_RESULT = ''
+        DEPLOY_RESULT = ''
+        NOTIFICATION_RESULT = ''
+    }
+
+    stages {
+        
+        
+        stage('Linter') {
+            steps {
+                script {
+                    sh 'chmod +x jenkinsScripts/linter.sh'
+                    LINTER_RESULT = sh(script: './jenkinsScripts/linter.sh', returnStdout: true).trim()
+                }
+            }
+        }
+
+        
+        stage('Test') {
+            steps {
+                script {
+                     sh 'chmod +x jenkinsScripts/test.sh'
+                    TEST_RESULT = sh(script: './jenkinsScripts/test.sh', returnStdout: true).trim()
+                }
+            }
+        }
+
+        
+        stage('Build') {
+            steps {
+                script {
+                    sh 'chmod +x jenkinsScripts/build.sh'
+                    BUILD_RESULT = sh(script: './jenkinsScripts/build.sh', returnStdout: true).trim()
+                }
+            }
+        }
+
+        
+        stage('Update_Readme') {
+            steps {
+                script {
+                    sh 'chmod +x jenkinsScripts/update_readme.sh'
+                    README_UPDATE_RESULT = sh(script: './jenkinsScripts/update_readme.sh', returnStdout: true).trim()
+                }
+            }
+        }
+
+        
+        stage('Push_Changes') {
+            steps {
+                script {
+                    sh 'chmod +x jenkinsScripts/push_changes.sh'
+                    PUSH_RESULT = sh(script: './jenkinsScripts/push_changes.sh', returnStdout: true).trim()
+                }
+            }
+        }
+
+       
+        stage('Deploy to Vercel') {
+            when {
+                expression { return (LINTER_RESULT == "success" && TEST_RESULT == "success" && BUILD_RESULT == "success" && README_UPDATE_RESULT == "success") }
+            }
+            steps {
+                script {
+                    sh 'chmod +x jenkinsScripts/deploy_to_vercel.sh'
+                    DEPLOY_RESULT = sh(script: './jenkinsScripts/deploy_to_vercel.sh', returnStdout: true).trim()
+                }
+            }
+        }
+
+        
+        stage('Notificació') {
+            steps {
+                script {
+                    sh 'chmod +x jenkinsScripts/notificacion.sh'
+                    NOTIFICATION_RESULT = sh(script: './jenkinsScripts/notificacion.sh', returnStdout: true).trim()
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline completada"
+        }
+
+        success {
+            echo "Pipeline ejecutada correctamente"
+        }
+
+        failure {
+            echo "La pipeline ha fallado"
+        }
+    }
+}
