@@ -61,13 +61,14 @@ pipeline {
 
         
         stage('Push_Changes') {
-            steps {
-                script {
-                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
-                    PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
-                }
-            }
+    steps {
+        script {
+            sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
+            PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
+            echo "Push result: ${PUSH_RESULT}"
         }
+    }
+}
 
        
         stage('Deploy to Vercel') {
