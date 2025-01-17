@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npx eslint .
+npm run lint 
 
 if [ $? -eq 0 ]; then
   echo "Linter: success"
