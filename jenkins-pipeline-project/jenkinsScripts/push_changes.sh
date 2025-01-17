@@ -25,20 +25,26 @@ else
     git checkout -b ci_jenkins origin/ci_jenkins
 fi
 
-# Añadir todos los cambios restantes al área de staging
+# Actualizar la rama local con el remoto
+echo "Actualizando rama local con el remoto..."
+git pull origin ci_jenkins --rebase || {
+    echo "Error al hacer pull de la rama remota"
+    exit 1
+}
+
+# Añadir todos los cambios restantes
 git add .
 
 # Crear un commit con las variables de entorno
 git commit -m "Pipeline ejecutada por $EXECUTOR, el motivo es: $MOTIVO"
 
-# Verificar si se usan credenciales para HTTPS o SSH
-if git remote -v | grep -q "https://"; then
-    # Configurar la URL remota con credenciales HTTPS si es necesario
-    git remote set-url origin https://<TOKEN>@github.com/EluMancebo/practica_final_jenkins.git
-fi
-
-# Realizar el push al remoto
-git push origin ci_jenkins
+# Realizar el push al remoto con credenciales HTTPS
+echo "Haciendo push al remoto..."
+git push origin ci_jenkins || {
+    echo "Error al hacer push. Intentando resolver..."
+    git pull origin ci_jenkins --rebase
+    git push origin ci_jenkins
+}
 
 # Verificar el resultado del push
 if [ $? -eq 0 ]; then
