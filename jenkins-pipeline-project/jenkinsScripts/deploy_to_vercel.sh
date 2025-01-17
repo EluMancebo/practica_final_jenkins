@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd jenkins-pipeline-project
 if ! command -v vercel &> /dev/null; then
   npm install -g vercel
 fi

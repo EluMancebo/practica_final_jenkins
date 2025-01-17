@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd jenkins-pipeline-project
 if [ "$TEST_RESULT" == "success" ]; then
   BADGE="https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg"
 else

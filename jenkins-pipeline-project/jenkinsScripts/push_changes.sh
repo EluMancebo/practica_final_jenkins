@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+cd jenkins-pipeline-project
 git add README.md
 
 

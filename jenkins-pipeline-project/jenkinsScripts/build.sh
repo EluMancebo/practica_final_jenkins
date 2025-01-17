@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd jenkins-pipeline-project
 npm run build
 
 if [ $? -eq 0 ]; then

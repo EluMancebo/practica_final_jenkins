@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd jenkins-pipeline-project
 
 curl -X POST \
   https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
