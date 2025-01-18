@@ -99,8 +99,8 @@ pipeline {
         stage('Notificació') {
             steps {
                 script {
-                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notificacion.sh'
-                    NOTIFICATION_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/notificacion.sh', returnStdout: true).trim()
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
+                    NOTIFICATION_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/notification.sh', returnStdout: true).trim()
                 }
             }
         }
