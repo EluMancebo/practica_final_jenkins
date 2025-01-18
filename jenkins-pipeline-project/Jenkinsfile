@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools {nodejs "Node"}
+    tools { nodejs "Node" }
     parameters {
         string(name: 'EXECUTOR', defaultValue: '', description: 'Nombre de la persona que ejecuta la pipeline')
         string(name: 'MOTIVO', defaultValue: '', description: 'Motivo de la ejecución de la pipeline')
@@ -69,7 +69,6 @@ pipeline {
                 }
             }
         }
-    }
 
         stage('Deploy to Vercel') {
             when {
@@ -84,7 +83,7 @@ pipeline {
             }
         }
 
-        stage('Notificació') {
+        stage('Notificación') {
             steps {
                 script {
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
@@ -99,13 +98,11 @@ pipeline {
         always {
             echo "Pipeline completada"
         }
-
         success {
             echo "Pipeline ejecutada correctamente"
         }
-
         failure {
             echo "La pipeline ha fallado"
         }
     }
-
+}
