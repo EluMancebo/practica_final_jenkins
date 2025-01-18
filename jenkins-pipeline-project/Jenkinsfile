@@ -4,7 +4,6 @@ pipeline {
     parameters {
         string(name: 'EXECUTOR', defaultValue: '', description: 'Nombre de la persona que ejecuta la pipeline')
         string(name: 'MOTIVO', defaultValue: '', description: 'Motivo de la ejecución de la pipeline')
-        string(name: 'CHAT_ID', defaultValue: '', description: 'Chat ID de Telegram para notificaciones')
     }
 
     environment {
@@ -12,11 +11,8 @@ pipeline {
         TEST_RESULT = ''
         BUILD_RESULT = ''
         README_UPDATE_RESULT = ''
-        PUSH_RESULT = ''
         DEPLOY_RESULT = ''
         NOTIFICATION_RESULT = ''
-        GIT_USERNAME = 'EluMancebo'
-        GIT_PASSWORD = credentials('GITHUB_TOKEN_ID')
     }
 
     stages {
@@ -62,10 +58,19 @@ pipeline {
 
         stage('Push Changes') {
             steps {
-                script {
-                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
-                    PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
-                    echo "Resultado del push: ${PUSH_RESULT}"
+                withCredentials([usernamePassword(credentialsId: 'GITHUB_CREDENTIALS_ID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    script {
+                        sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
+                        try {
+                            sh """
+                                ./jenkinsScripts/pushChanges.sh '${params.EXECUTOR}' '${params.MOTIVO}'
+                            """
+                            echo "Push completado con éxito."
+                        } catch (Exception e) {
+                            echo "Error al hacer push de los cambios: ${e.message}"
+                            error "Push fallido."
+                        }
+                    }
                 }
             }
         }
