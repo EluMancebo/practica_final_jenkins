@@ -58,7 +58,7 @@ pipeline {
 
         stage('Push Changes') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'GITHUB_CREDENTIALS_ID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'GITHUB_TOKEN_ID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     script {
                         sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
                         try {
