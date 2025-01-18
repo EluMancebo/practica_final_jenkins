@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Configurar identidad de usuario
+# Configurar identidad de usuario para Git
 git config --global user.name "EluM"
 git config --global user.email "emango0298@gmail.com"
 
@@ -25,8 +25,20 @@ if [ -z "${GIT_USERNAME}" ] || [ -z "${GIT_PASSWORD}" ]; then
     echo "Error: Las credenciales GIT_USERNAME o GIT_PASSWORD no están definidas."
     exit 1
 fi
+
+# Configurar la URL remota con token
 git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/EluMancebo/practica_final_jenkins.git
 
+# Verificar el estado actual de la rama
+echo "Actualizando la rama local..."
+git fetch origin ci_jenkins || {
+    echo "Error al hacer fetch del remoto."
+    exit 1
+}
+git rebase origin/ci_jenkins || {
+    echo "Error al hacer rebase con la rama remota."
+    exit 1
+}
 
 # Intentar hacer push al remoto
 echo "Haciendo push al remoto..."
