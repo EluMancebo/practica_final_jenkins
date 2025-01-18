@@ -32,16 +32,26 @@ git pull origin ci_jenkins --rebase || {
     exit 1
 }
 
-# Añadir todos los cambios restantes
-git add .
+# Verificar si hay cambios pendientes en el directorio de trabajo
+if ! git diff-index --quiet HEAD; then
+    echo "Añadiendo y confirmando cambios locales..."
+    git add .
+    git commit -m "Pipeline ejecutada por ${EXECUTOR}, el motivo es: ${MOTIVO}"
+else
+    echo "Nada que confirmar. El directorio de trabajo está limpio."
+fi
 
-# Crear un commit con las variables de entorno
-git commit -m "Pipeline ejecutada por $EXECUTOR, el motivo es: $MOTIVO" || echo "Nada que confirmar"
+# Configurar la URL remota con credenciales (asegurarse de que estén definidas)
+if [ -z "${GIT_USERNAME}" ] || [ -z "${GIT_PASSWORD}" ]; then
+    echo "Error: Las credenciales GIT_USERNAME o GIT_PASSWORD no están definidas."
+    exit 1
+fi
+git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/EluMancebo/practica_final_jenkins.git
 
-# Realizar el push al remoto con credenciales HTTPS
+# Intentar hacer push al remoto
 echo "Haciendo push al remoto..."
 git push origin ci_jenkins || {
-    echo "Error al hacer push. Intentando resolver..."
+    echo "Push fallido. Intentando resolver conflictos..."
     git pull origin ci_jenkins --rebase
     git push origin ci_jenkins || {
         echo "Push fallido después de intentar resolver conflictos."
@@ -49,11 +59,5 @@ git push origin ci_jenkins || {
     }
 }
 
-# Verificar el resultado del push
-if [ $? -eq 0 ]; then
-    echo "Push: success"
-    exit 0
-else
-    echo "Push: failed"
-    exit 1
-fi
+echo "Push realizado con éxito"
+exit 0
