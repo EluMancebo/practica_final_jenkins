@@ -18,71 +18,56 @@ pipeline {
     }
 
     stages {
-        
-        
         stage('Linter') {
             steps {
                 script {
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/linter.sh'
                     LINTER_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/linter.sh', returnStdout: true).trim()
+                    echo "Resultado del linter: ${LINTER_RESULT}"
                 }
             }
         }
 
-        
         stage('Test') {
             steps {
                 script {
-                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/test.sh'
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/test.sh'
                     TEST_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/test.sh', returnStdout: true).trim()
+                    echo "Resultado de los tests: ${TEST_RESULT}"
                 }
             }
         }
 
-        
         stage('Build') {
             steps {
                 script {
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/build.sh'
                     BUILD_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/build.sh', returnStdout: true).trim()
+                    echo "Resultado del build: ${BUILD_RESULT}"
                 }
             }
         }
 
-        
         stage('Update_Readme') {
             steps {
                 script {
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/update_radme.sh'
                     README_UPDATE_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/update_radme.sh', returnStdout: true).trim()
+                    echo "Resultado de la actualización del README: ${README_UPDATE_RESULT}"
                 }
             }
         }
 
-        
-       stage('Push_Changes') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'GITHUB_TOKEN_ID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-            script {
-                // Configurar la URL remota con las credenciales
-                sh """
-                    git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/EluMancebo/practica_final_jenkins.git
-                """
-
-                // Ejecutar el script para hacer el push
-                sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
-                PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
-
-                // Mostrar el resultado del push
-                echo "Push result: ${PUSH_RESULT}"
+        stage('Push_Changes') {
+            steps {
+                script {
+                    sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/push_changes.sh'
+                    PUSH_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/push_changes.sh', returnStdout: true).trim()
+                    echo "Resultado del push: ${PUSH_RESULT}"
+                }
             }
         }
-    }
-}
 
-
-
-       
         stage('Deploy to Vercel') {
             when {
                 expression { return (LINTER_RESULT == "success" && TEST_RESULT == "success" && BUILD_RESULT == "success" && README_UPDATE_RESULT == "success") }
@@ -91,16 +76,17 @@ pipeline {
                 script {
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/deploy_to_vercel.sh'
                     DEPLOY_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/deploy_to_vercel.sh', returnStdout: true).trim()
+                    echo "Resultado del deploy: ${DEPLOY_RESULT}"
                 }
             }
         }
 
-        
         stage('Notificació') {
             steps {
                 script {
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
                     NOTIFICATION_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/notification.sh', returnStdout: true).trim()
+                    echo "Resultado de la notificación: ${NOTIFICATION_RESULT}"
                 }
             }
         }
