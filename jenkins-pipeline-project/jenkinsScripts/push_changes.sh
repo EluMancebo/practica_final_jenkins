@@ -20,16 +20,22 @@ fi
 git add README.md
 git commit -m "Actualización automática del README.md con resultados de pruebas"
 
-# Configurar la URL remota con credenciales (asegurarse de que estén definidas)
+# Configurar la URL remota con credenciales
 if [ -z "${GIT_USERNAME}" ] || [ -z "${GIT_PASSWORD}" ]; then
     echo "Error: Las credenciales GIT_USERNAME o GIT_PASSWORD no están definidas."
     exit 1
 fi
-
-# Configurar la URL remota con token
 git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/EluMancebo/practica_final_jenkins.git
 
-# Verificar el estado actual de la rama
+# Asegurarse de que el árbol de trabajo está limpio antes del rebase
+echo "Verificando el estado del árbol de trabajo..."
+if ! git diff --quiet; then
+    echo "Hay cambios no confirmados. Confirmando automáticamente..."
+    git add .
+    git commit -m "Confirmación automática de cambios antes del rebase"
+fi
+
+# Actualizar la rama local con el remoto
 echo "Actualizando la rama local..."
 git fetch origin ci_jenkins || {
     echo "Error al hacer fetch del remoto."
