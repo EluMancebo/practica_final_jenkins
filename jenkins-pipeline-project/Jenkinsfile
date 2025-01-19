@@ -61,7 +61,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'GITHUB_TOKEN_ID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     script {
-                        sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
+                        sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/pushChanges.sh'
                         try {
                             sh """
                                 jenkins-pipeline-project/jenkinsScripts/pushChanges.sh '${params.EXECUTOR}' '${params.MOTIVO}'
