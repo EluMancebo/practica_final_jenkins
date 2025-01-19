@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Configurar identidad de usuario para Git
-git config --global user.name "EluM"
-git config --global user.email "emango0298@gmail.com"
+# Configurar identidad de usuario para Git localmente
+git config user.name "EluM"
+git config user.email "emango0298@gmail.com"
 
 # Cambiar al directorio raíz del proyecto
 cd jenkins-pipeline-project || {
@@ -28,12 +28,19 @@ fi
 # Configurar la URL remota con credenciales
 git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/EluMancebo/practica_final_jenkins.git
 
-# Asegurar que el árbol de trabajo esté sincronizado con el remoto
+# Actualizar la rama local con el remoto
 echo "Actualizando la rama local..."
 git fetch origin ci_jenkins || {
     echo "Error al hacer fetch del remoto."
     exit 1
 }
+
+if ! git diff-index --quiet HEAD; then
+    echo "Hay cambios no confirmados. Commit automático..."
+    git add .
+    git commit -m "Cambios locales no confirmados antes del rebase"
+fi
+
 git rebase origin/ci_jenkins || {
     echo "Error al hacer rebase con la rama remota."
     exit 1
