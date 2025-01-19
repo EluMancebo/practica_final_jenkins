@@ -79,7 +79,14 @@ pipeline {
 
         stage('Deploy to Vercel') {
             when {
-                expression { return (LINTER_RESULT == "success" && TEST_RESULT == "success" && BUILD_RESULT == "success" && README_UPDATE_RESULT == "success") }
+                expression { 
+                    echo "Debugging Variables for Deploy to Vercel:"
+                    echo "LINTER_RESULT: ${LINTER_RESULT}"
+                    echo "TEST_RESULT: ${TEST_RESULT}"
+                    echo "BUILD_RESULT: ${BUILD_RESULT}"
+                    echo "README_UPDATE_RESULT: ${README_UPDATE_RESULT}"
+                    return (LINTER_RESULT == "success" && TEST_RESULT == "success" && BUILD_RESULT == "success" && README_UPDATE_RESULT == "success") 
+                }
             }
             steps {
                 script {
@@ -97,6 +104,9 @@ pipeline {
                     string(credentialsId: 'telegram_chat_id', variable: 'CHAT_ID')
                 ]) {
                     script {
+                        echo "Debugging Telegram Credentials:"
+                        echo "TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}"
+                        echo "CHAT_ID: ${CHAT_ID}"
                         sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
                         try {
                             sh """
