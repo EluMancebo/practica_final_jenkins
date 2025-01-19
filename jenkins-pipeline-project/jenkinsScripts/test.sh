@@ -1,5 +1,5 @@
 #!/bin/bash
-cd jenkins-pipeline-project
+cd jenkins-pipeline-project || exit 1
 npm run test -- --ci --silent
 
 if [ $? -eq 0 ]; then

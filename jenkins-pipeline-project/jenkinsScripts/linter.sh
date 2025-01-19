@@ -1,5 +1,5 @@
 #!/bin/bash
-cd jenkins-pipeline-project
+cd jenkins-pipeline-project || exit 1
 npm install
 npm run lint 
 

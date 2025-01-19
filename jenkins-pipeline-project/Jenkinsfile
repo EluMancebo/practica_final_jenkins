@@ -17,7 +17,6 @@ pipeline {
     }
 
     stages {
-
         stage('Linter') {
             steps {
                 script {
@@ -85,7 +84,7 @@ pipeline {
                     echo "TEST_RESULT: ${TEST_RESULT}"
                     echo "BUILD_RESULT: ${BUILD_RESULT}"
                     echo "README_UPDATE_RESULT: ${README_UPDATE_RESULT}"
-                    return (LINTER_RESULT == "success" && TEST_RESULT == "success" && BUILD_RESULT == "success" && README_UPDATE_RESULT == "success") 
+                    return (LINTER_RESULT == "Linter: success" && TEST_RESULT == "Test: success" && BUILD_RESULT == "Build: success" && README_UPDATE_RESULT == "Update_readme: success") 
                 }
             }
             steps {

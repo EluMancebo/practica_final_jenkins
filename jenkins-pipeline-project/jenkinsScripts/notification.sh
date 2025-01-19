@@ -12,6 +12,13 @@ if [[ -z "$TELEGRAM_BOT_TOKEN" || -z "$CHAT_ID" ]]; then
     exit 1
 fi
 
+# Exportar variables para garantizar su disponibilidad
+export LINTER_RESULT
+export TEST_RESULT
+export BUILD_RESULT
+export README_UPDATE_RESULT
+export DEPLOY_RESULT
+
 # Enviar notificación a Telegram
 curl -s -X POST \
     "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
@@ -19,6 +26,7 @@ curl -s -X POST \
     -d "text=S'ha executat la pipeline de Jenkins amb els següents resultats:
     - Linter_stage: $LINTER_RESULT
     - Test_stage: $TEST_RESULT
+    - Build_stage: $BUILD_RESULT
     - Update_readme_stage: $README_UPDATE_RESULT
     - Deploy_to_Vercel_stage: $DEPLOY_RESULT" > /dev/null
 
