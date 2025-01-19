@@ -17,7 +17,7 @@ pipeline {
     }
 
     stages {
-    
+
         stage('Linter') {
             steps {
                 script {
@@ -90,25 +90,27 @@ pipeline {
             }
         }
 
-        steps {
-        script {
-            sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
-            withCredentials([
-                string(credentialsId: 'telegram_bot_token', variable: 'TELEGRAM_BOT_TOKEN'),
-                string(credentialsId: 'telegram_chat_id', variable: 'CHAT_ID')
-            ]) {
-                try {
-                    sh """
-                        jenkins-pipeline-project/jenkinsScripts/notification.sh
-                    """
-                    echo "Notificación enviada con éxito."
-                } catch (Exception e) {
-                    echo "Error al enviar la notificación: ${e.message}"
-                    error "Notificación fallida."
+        stage('Notificación') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'telegram_bot_token', variable: 'TELEGRAM_BOT_TOKEN'),
+                    string(credentialsId: 'telegram_chat_id', variable: 'CHAT_ID')
+                ]) {
+                    script {
+                        sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
+                        try {
+                            sh """
+                                jenkins-pipeline-project/jenkinsScripts/notification.sh
+                            """
+                            echo "Notificación enviada con éxito."
+                        } catch (Exception e) {
+                            echo "Error al enviar la notificación: ${e.message}"
+                            error "Notificación fallida."
+                        }
+                    }
                 }
             }
         }
-    }
     }
 
     post {
