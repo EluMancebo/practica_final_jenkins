@@ -50,7 +50,6 @@ pipeline {
         stage('Update_Readme') {
             steps {
                 script {
-                    exportVars()
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/update_radme.sh'
                     README_UPDATE_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/update_radme.sh', returnStdout: true).trim()
                     echo "Resultado de la actualización del README: ${README_UPDATE_RESULT}"
@@ -80,12 +79,16 @@ pipeline {
         stage('Deploy to Vercel') {
             when {
                 expression { 
-                    return (LINTER_RESULT.contains("success") && TEST_RESULT.contains("success") && BUILD_RESULT.contains("success") && README_UPDATE_RESULT.contains("success")) 
+                    echo "Debugging Variables for Deploy to Vercel:"
+                    echo "LINTER_RESULT: ${LINTER_RESULT}"
+                    echo "TEST_RESULT: ${TEST_RESULT}"
+                    echo "BUILD_RESULT: ${BUILD_RESULT}"
+                    echo "README_UPDATE_RESULT: ${README_UPDATE_RESULT}"
+                    return (LINTER_RESULT == "Linter: success" && TEST_RESULT == "Test: success" && BUILD_RESULT == "Build: success" && README_UPDATE_RESULT == "Update_readme: success") 
                 }
             }
             steps {
                 script {
-                    exportVars()
                     sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/deploy_to_vercel.sh'
                     DEPLOY_RESULT = sh(script: 'jenkins-pipeline-project/jenkinsScripts/deploy_to_vercel.sh', returnStdout: true).trim()
                     echo "Resultado del deploy: ${DEPLOY_RESULT}"
@@ -100,7 +103,9 @@ pipeline {
                     string(credentialsId: 'telegram_chat_id', variable: 'CHAT_ID')
                 ]) {
                     script {
-                        exportVars()
+                        echo "Debugging Telegram Credentials:"
+                        echo "TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}"
+                        echo "CHAT_ID: ${CHAT_ID}"
                         sh 'chmod +x jenkins-pipeline-project/jenkinsScripts/notification.sh'
                         try {
                             sh """
@@ -128,12 +133,4 @@ pipeline {
             echo "La pipeline ha fallado"
         }
     }
-}
-
-def exportVars() {
-    env.LINTER_RESULT = LINTER_RESULT
-    env.TEST_RESULT = TEST_RESULT
-    env.BUILD_RESULT = BUILD_RESULT
-    env.README_UPDATE_RESULT = README_UPDATE_RESULT
-    env.DEPLOY_RESULT = DEPLOY_RESULT
 }
