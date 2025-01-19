@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Configurar identidad de usuario para Git localmente
+# Configurar identidad de usuario para Git (local)
 git config user.name "EluM"
 git config user.email "emango0298@gmail.com"
 
@@ -9,6 +9,13 @@ cd jenkins-pipeline-project || {
     echo "Error: No se encontró el directorio del proyecto"
     exit 1
 }
+
+# Cambiar a la rama correcta (ci_jenkins)
+if git show-ref --verify --quiet refs/heads/ci_jenkins; then
+    git checkout ci_jenkins
+else
+    git checkout -b ci_jenkins origin/ci_jenkins
+fi
 
 # Verificar si hay cambios en README.md
 if git diff --quiet README.md; then
